@@ -1,13 +1,21 @@
 import "devextreme/dist/css/dx.dark.css";
 import "./App.css";
+import ArrayStore from "devextreme/data/array_store";
 import Button from "devextreme-react/button";
-import TextBox from "devextreme-react/text-box";
-import { useCallback, useState, useRef } from "react";
+import DataGrid, { Column } from "devextreme-react/data-grid";
 
-let textValue = "";
+import { useCallback, useState, useRef } from "react";
+import { companies } from "./companies";
+
+const store = new ArrayStore({
+  key: "ID",
+  data: companies,
+});
+
+const columns = ["CompanyName", "City", "State", "Phone", "Fax"];
 
 function App() {
-  const [content, setContent] = useState(false);
+  const [show, setShow] = useState(true);
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
 
@@ -16,38 +24,21 @@ function App() {
   }, []);
 
   const onClick = () => {
-    textValue = value;
-    setContent(!content);
+    setShow(!show);
   };
 
   return (
     <div className="App">
-      <Button text="Click me!" type="success" onClick={onClick} />
-      <TextBox
-        className="textbox"
-        value={value}
-        onValueChanged={handleValueChanged}
-        label="Link"
-        labelMode="floating"
-      />
-      <TextBox
-        className="textbox"
-        ref={inputRef}
-        defaultValue=""
-        label="Link"
-        labelMode="floating"
-      />
-      {content && <TextBoxesContent inputRef={inputRef} value={textValue} />}
-    </div>
-  );
-}
-
-function TextBoxesContent(props) {
-  const { value, inputRef } = props;
-  return (
-    <div className="text-boxes-value">
-      <p>{value}</p>
-      <p>{inputRef.current.instance.option("value")}</p>
+      <Button text="Toggle State" type="success" onClick={onClick} />
+      <DataGrid dataSource={store}>
+        {columns.map((column, index) =>
+          show || column !== "State" ? (
+            <Column dataField={column} key={index} visible={true} />
+          ) : (
+            <Column dataField={column} key={index} visible={false} />
+          )
+        )}
+      </DataGrid>
     </div>
   );
 }
