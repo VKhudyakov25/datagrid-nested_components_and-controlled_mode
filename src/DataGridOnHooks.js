@@ -82,7 +82,7 @@ function DataGridOnHooks() {
       <div style={{ marginTop: "10px" }}>
         Selected Records:{" "}
         {selected.length === 0
-          ? "Nobody has been selected"
+          ? "Nothing has been selected"
           : selected.toString()}
       </div>
     </div>
